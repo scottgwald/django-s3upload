@@ -51,6 +51,7 @@ def get_upload_params(request):
                 { "bucket": settings.AWS_S3_BUCKET_NAME },
                 { "acl": "public-read" },
                 ["starts-with", "$key", "uploads/"],
+                ['starts-with', '$Content-Type', ''],
                 { "success_action_status": "201" }
             ]
         }

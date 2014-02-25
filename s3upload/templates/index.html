@@ -9,6 +9,9 @@
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.3.3/coffee-script.min.js"></script>
         <script type="text/javascript" src="{% url static "jquery.fileupload.js" %}"></script>
         <script type="text/coffeescript">
+            isImage = (name) ->
+                console.log("Filename is " + name)
+                name.substr(name.length - 3).toLowerCase() == "jpg"
             log = (status) ->
                 $("#status").html status
             $ ->
@@ -19,13 +22,17 @@
                     dataType: "xml"
                     add: (event, data) ->
                         log "fetching params"
+                        name = data.originalFiles[0].name
+                        type = if isImage(name) then "image/jpeg" else "binary/octet-stream"
                         $.get("{% url params %}").done (params) ->
-                            form.find('input[name=key]').val(params.key)
+                            form.find('input[name=key]').val("uploads/" + name)
                             form.find('input[name=policy]').val(params.policy)
                             form.find('input[name=signature]').val(params.signature)
+                            form.find('input[name=Content-Type]').val(type)
                             data.submit()
                     send: (event, data) ->
                         log "sending"
+                        console.log(data)
                     progress: (event, data) ->
                         $("#progress_bar").css "width", "#{Math.round((event.loaded / event.total) * 1000) / 10}%"
                     fail: (event, data) ->
@@ -45,6 +52,7 @@
                 <input type="hidden" name="policy"></input>
                 <input type="hidden" name="signature"></input>
                 <input type="hidden" name="success_action_status" value="201"></input>
+                <input type="hidden" name="Content-Type" value="binary/octet-stream"></input>
                 <input type="file" name="file"></input>
             </form>
         </div>
