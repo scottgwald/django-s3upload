@@ -1,2 +1,6 @@
 runcommands.sh
 .venv
+*.pyc
+.DS_Store
+config/
+*~

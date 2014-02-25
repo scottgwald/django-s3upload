@@ -55,5 +55,30 @@
             </div>
         </div>
         <div id="status_container">Status: <span id="status">idle</span></div>
+        <h1>Files in Bucket</h1>
+        <div id='bucketFiles'></div>
+        <script> 
+        console.log("About to get bucketFiles");
+
+        var jqxhr = $.ajax({
+            url: "bucketFiles",
+            dataType: "json"
+            })
+          .done(function(data) {
+            console.log(data);
+            $.each(data, function(ind, file) {
+                $('#bucketFiles').append($('<div>').html(file));
+            })
+            console.log( "success" );
+          })
+          .fail(function(xhr, status) {
+            console.log( "error" );
+            console.log("Status: " + status);
+          })
+          .always(function() {
+            console.log( "complete" );
+          });
+
+        </script>
     </body>
 </html>

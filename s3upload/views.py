@@ -7,12 +7,29 @@ from uuid import uuid4
 import hmac
 import sha
 
+import boto
+
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from django.utils import simplejson
+
+s3 = boto.connect_s3()
+bucket = s3.get_bucket('jamski2014')
+bucket.list()
+bucketList = bucket.list()
+for file in bucketList:
+   print file.name
 
 def index(request):
     return render_to_response('index.html', {"settings": settings})
+
+def bucket_files(request):
+    data = [];
+    for file in bucketList:
+        data.append(file.name)
+    jdata = simplejson.dumps(data)
+    return HttpResponse(jdata, mimetype='application/json')
 
 def static(request, filename):
     try:
