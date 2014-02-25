@@ -27,7 +27,8 @@ def index(request):
 def bucket_files(request):
     data = [];
     for file in bucketList:
-        data.append(file.name)
+        #print file.generate_url(100)
+        data.append([file.name, file.generate_url(100)]);
     jdata = simplejson.dumps(data)
     return HttpResponse(jdata, mimetype='application/json')
 

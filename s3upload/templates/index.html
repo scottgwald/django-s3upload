@@ -67,7 +67,7 @@
           .done(function(data) {
             console.log(data);
             $.each(data, function(ind, file) {
-                $('#bucketFiles').append($('<div>').html(file));
+                $('#bucketFiles').append($('<div>').append($('<a>').attr('href', file[1]).html(file[0])));
             })
             console.log( "success" );
           })
