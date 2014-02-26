@@ -9,6 +9,7 @@
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.3.3/coffee-script.min.js"></script>
         <script type="text/javascript" src="{% url static "jquery.fileupload.js" %}"></script>
         <script type="text/coffeescript">
+            cnt = 0
             isImage = (name) ->
                 console.log("Filename is " + name)
                 name.substr(name.length - 3).toLowerCase() == "jpg"
@@ -22,7 +23,7 @@
                     dataType: "xml"
                     add: (event, data) ->
                         log "fetching params"
-                        name = data.originalFiles[0].name
+                        name = data.originalFiles[cnt].name
                         type = if isImage(name) then "image/jpeg" else "binary/octet-stream"
                         $.get("{% url params %}").done (params) ->
                             form.find('input[name=key]').val("uploads/" + name)
@@ -30,6 +31,12 @@
                             form.find('input[name=signature]').val(params.signature)
                             form.find('input[name=Content-Type]').val(type)
                             data.submit()
+                        if cnt == data.originalFiles.length - 1
+                            console.log("index " + cnt + "... resetting")
+                            cnt = 0
+                        else 
+                            console.log("index " + cnt + " out of " + data.originalFiles.length)
+                            cnt++
                     send: (event, data) ->
                         log "sending"
                         console.log(data)
